@@ -1,94 +1,108 @@
-🏦 Banking Analytics & Anomaly Detection
-This project explores customer-level behavioral analytics using Indian banking transaction data. Through structured feature engineering, unsupervised learning, and anomaly detection, we derive meaningful insights into customer segments and suspicious patterns.
+# Banking Analytics & Anomaly Detection
 
-📌 Objective
-To analyze transaction patterns and customer behaviors to:
+This project explores customer-level behavioral analytics using Indian banking transaction data. Through structured feature engineering, unsupervised learning, and anomaly detection techniques, we derive meaningful insights into customer segments and suspicious patterns.
 
-Segment users using unsupervised clustering
+---
 
-Detect anomalies (outlier transactions or users)
+## Objective
 
-Derive actionable insights to support business decision-making in banking, fraud detection, and customer profiling
+To analyze transaction patterns and customer behaviors in order to:
 
-📁 Dataset
-Source: Kaggle – Indian Bank Transactions
+- Segment users using unsupervised clustering (KMeans)
+- Detect anomalies (unusual transactions or outlier customers)
+- Derive actionable insights to support decision-making in:
+  - Banking risk profiling
+  - Fraud detection
+  - Customer segmentation
 
-Rows: 1,048,567 transactions
+---
 
-Columns: Customer ID, Transaction Amount, Account Balance, Date, Time, Gender, DOB, Location
+## Dataset
 
-⚙️ Key Steps Performed
-✅ 1. Data Cleaning & Parsing
-Handled incorrect and future-looking DOBs
+- **Source**: Kaggle – Indian Bank Transactions
+- **Records**: 1,048,567 transactions
+- **Features**: Customer ID, Transaction Amount, Account Balance, Date, Time, Gender, DOB, Location
 
-Parsed date and time columns
+---
 
-Constructed full TransactionDateTime
+## ⚙️ Key Steps Performed
 
-Extracted components: year, month, hour, weekday
+### 1. Data Cleaning & Parsing
 
-✅ 2. Feature Engineering
-Calculated age from DOB
+- Fixed inconsistent and future-looking Date of Birth values
+- Parsed date and time columns, created unified `TransactionDateTime`
+- Extracted temporal components: `year`, `month`, `hour`, `weekday`
 
-Cleaned missing values with median/mode strategies
+### 2. Feature Engineering
 
-Derived log-transformed columns for skewed features
+- Calculated customer `age` from DOB
+- Handled missing values with median/mode imputation
+- Created log-transformed versions for skewed financial attributes
+- Aggregated transactions per customer to generate features like:
+  - `avg_txn_amt`, `max_txn_amt`, `txn_count`
+  - `avg_bal`, `min_bal`, `max_bal`
+  - `active_hours`, `active_months`, `avg_hour`
 
-Aggregated transaction data to customer-level features like:
+### 3. Categorical Encoding
 
-avg_txn_amt, max_txn_amt, txn_count
+- One-hot encoded gender and customer location
+- Retained top 20 locations, grouped the rest as `"Other"`
 
-avg_bal, min_bal, max_bal
+### 4. Scaling & Transformation
 
-active_hours, active_months, avg_hour
+- Applied `StandardScaler` to normalize numerical features
+- Log-transformed skewed values to reduce influence of outliers
 
-✅ 3. Categorical Encoding
-One-hot encoded CustGender and CustLocation
+### 5. Clustering (KMeans + PCA)
 
-Pruned to top 20 locations + grouped others as "Other"
+- Applied PCA to reduce dimensionality for visualization
+- Performed KMeans clustering to segment customers into behavioral clusters
+- Interpreted clusters to understand patterns in spending, balance, and transaction activity
 
-✅ 4. Scaling & Transformation
-Applied StandardScaler to normalize numerical features
+### 6. Anomaly Detection (Isolation Forest)
 
-Log-transformed skewed financial attributes
+- Used Isolation Forest to flag anomalous customer behavior
+- Identified ~885 high-risk users from ~884,000 total customers
+- Visualized anomalies in PCA-reduced space
 
-✅ 5. Clustering (KMeans)
-Applied PCA for dimensionality reduction
+---
 
-Clustered customers into behavioral segments
+##  Final Insights
 
-Explored clusters to identify patterns in spending & balance
+| Metric                | Normal Users   | Anomalies        |
+|------------------------|----------------|------------------|
+| Avg Txn Amount         | ₹1,524         | ₹52,683          |
+| Total Txn Amount       | ₹1,811         | ₹57,944          |
+| Avg Balance            | ₹1.0 Lakh      | ₹1.42 Crore      |
+| Transaction Count      | ~1.18          | ~1.14            |
+| Active Months          | ~1.5           | ~1.1             |
 
-✅ 6. Anomaly Detection
-Used Isolation Forest to detect outliers
+- Anomalous users transact with significantly higher amounts and maintain very large balances.
+- Likely High Net-worth Individuals (HNIs) or potential laundering profiles.
+- Clustering revealed segments ranging from low-activity users to heavy financial movers.
 
-Flagged ~885 high-risk users from ~884k total customers
+---
 
-Visualized anomalies in PCA-reduced space
+## Business Use Cases
 
-📊 Final Insights
-Metric	Normal Users	Anomalies
-Avg Txn Amount	₹1,524	₹52,683
-Total Txn Amount	₹1,811	₹57,944
-Avg Balance	₹1.0 Lakh	₹1.42 Cr
-Txn Count	~1.18	~1.14
-Active Months	~1.5	~1.1
+- **Fraud Detection**: Detect unusual patterns or high-risk behaviors early
+- **Customer Segmentation**: Build targeted marketing strategies
+- **Risk Profiling**: Identify low vs. high-risk customers for credit and service decisions
 
-Anomalous users transact with significantly higher amounts and maintain very large balances.
+---
 
-Likely HNI (High Net-worth Individuals) or potential laundering profiles.
+## Files Included
 
-Clusters show segmentation from small casual users to heavy financial movers.
+| File Name            | Description                                    |
+|----------------------|------------------------------------------------|
+| `project.ipynb`      | Complete Jupyter Notebook with all code steps |
+| `PCA_2D_plot.png`    | 2D PCA projection with cluster coloring       |
+| `anomaly_plot.png`   | Visualized outliers from Isolation Forest     |
 
-📦 Files
-File	Description
-project.ipynb	Full notebook with all steps
-PCA_2D_plot.png	PCA projection with clusters
-anomaly_plot.png	Isolation Forest anomaly visualization
+---
 
-💡 Business Use Cases
-📌 Fraud Detection: Flag anomalous customer behavior early
+## 🛠 Technologies Used
 
-📊 Customer Segmentation: Build targeted marketing and support
-
-🧠 Risk Profiling: Identify high-risk vs. low-risk customers
+- Python, Pandas, NumPy
+- Scikit-learn (PCA, KMeans, Isolation Forest)
+- Matplotlib, Seaborn
