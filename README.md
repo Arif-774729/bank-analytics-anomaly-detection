@@ -96,8 +96,7 @@ To analyze transaction patterns and customer behaviors in order to:
 | File Name            | Description                                    |
 |----------------------|------------------------------------------------|
 | `project.ipynb`      | Complete Jupyter Notebook with all code steps |
-| `PCA_2D_plot.png`    | 2D PCA projection with cluster coloring       |
-| `anomaly_plot.png`   | Visualized outliers from Isolation Forest     |
+
 
 ---
 
